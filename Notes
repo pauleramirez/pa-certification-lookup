@@ -1,0 +1,38 @@
+2/3/23: Get git working and make a repo. Then work on batch processing five at a time. Should do it server side. 
+2/3/23: In process, writing handleSubmit
+2/2/23: write my handle submit function and then pass as props down to component
+2/1/23: Hook up handle change, also needs to display whatever that state is
+1/31/23: Instead of forms and onSubmit, useState and handlechange. Create these in the Home file, then prop drill them down as necessary. See Thinkquiry.
+1/30/23: Work on submit form. Do I need to prop drill my setter function? Should I eliminate the form entirely?
+1/29/23: Fixed my scraper. Next check that server returns the correct object format. Then work on the front end connections.
+1/28/23: Continue trying to fix the navigation waiting error.
+1/27/23: Fix the async problem in getCertInfo. DO this by putting the if statements within the awaits and removing the else creation of the const.
+1/27/23: Next, work on getting name and also emergency credentials in scraper
+1/26: Figure out how to split into a new line for table cells. Probably this: https://stackoverflow.com/questions/67696721/react-materialui-how-to-have-whitespace-from-string-be-respected
+1/26/23: Here's the table structure:
+PPID; Name; Standard Credentials Held (all in one cell with new line, numbered); Issue Date (numbered, new line); Expiration Date; Credential Status; Emergency Credentials Held; Issue Date; Expiration Date; Credential Status.
+Next: Create a model object in sample response, then get this to display.
+After: Set up the scraper to do this.
+1/25/23: Figure out the structure of the table. What is the ideal?
+1/24/23: create a data display table below.
+1/24/23: Continue video at 20:46
+1/24/23: Figure out why theme provider isn't giving the theme
+1/23/23: Create a theme provider. Stopped at 15:18
+1/22/23: Material UI Intro: https://www.youtube.com/watch?v=_W3uuxDnySQ&list=PLQg6GaokU5CyVrmVsYa9R3g1z2Tsmfpm-
+Stopped at 10:09
+1/21/23: Continue figuring out flexbox
+1/20/23: Continue working on frontend. Need to make the text box larger
+1/19/23: Consider using this frontend template: https://github.com/mui/material-ui/tree/v5.11.5/docs/data/material/getting-started/templates/sign-in
+1/17/23: Woring on using materialUI. I just imported the Roboto font.
+1/16/23: Figure out what is in table and then ideal display of table
+1/15/23: Import the standard credentials table and then display it on the page.
+1/14/23: Need to display the table response. And then do error handling for faulty PPID's.
+1/13/23: work on connecting the frontend to the backend. Make sure it sends and receives the correct things.
+1/12/23: figure out timeout issues? waiting for a selector that doesn't appear? or something else.
+1/11/23: Problem is that it's doing all of the lookups asynchronously. Maybe start the browser each time? or do syncronously.
+1/10/23: fixed the async nature of loop. Now there's a weird lag. I wonder if it's stalling on finding a page element?
+1/9/23: Need to fix async nature of the for loop - https://stackoverflow.com/questions/40140149/use-async-await-with-array-map
+1/8: In the middle of figuring out the ppid loop in getCertInfo
+1/6: I want getCertInfo to return an array of objects, each object being a teacher with ppid and standardCerts as elements.  
+1/5: Server works. Now I need to display the results of the response into the frontend.
+1/4: Simple lookupController done. Next step, install postman and test my server. Then after that, go to the webpage and check that I'm sending and receiving the object correctly.
