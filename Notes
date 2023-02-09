@@ -1,4 +1,8 @@
-2/3/23: Get git working and make a repo. Then work on batch processing five at a time. Should do it server side. 
+2/9/23: add error handling: no educator found. Add timeout handling. add applications to frontend.
+2/6/23: probably need to remove map entirely and use for of with async
+2/5/23: Continuing to work on batch processing
+2/4/23: Work on batch processing 5 at a time server side
+2/3/23: Get git working and make a repo. Then work on batch processing five at a time. Should do it server side.
 2/3/23: In process, writing handleSubmit
 2/2/23: write my handle submit function and then pass as props down to component
 2/1/23: Hook up handle change, also needs to display whatever that state is

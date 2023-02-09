@@ -1,126 +1,137 @@
 const puppeteer = require("puppeteer");
-const screenshot = "screenshot.png";
 
 const getCertInfo = async (ppidArray) => {
-  //should change to expect input to be an array of ppids
+  const chunkSize = 5;
+  const chunks = [];
+  for (let i = 0; i < ppidArray.length; i += chunkSize) {
+    chunks.push(ppidArray.slice(i, i + chunkSize));
+  }
 
   const browser = await puppeteer.launch({
     args: ["--disabled-setuid-sandbox", "--no-sandbox"],
     headless: false,
   });
 
-  const asyncMap = async (ppidArray) => {
-    return Promise.all(
-      ppidArray.map(async (ppid) => {
-        // do something asynchronous with item
-        const page = await browser.newPage();
+  const allTeacherInfo = [];
 
-        await page.goto(
-          "http://www.teachercertification.pa.gov/Screens/wfSearchEducators.aspx"
-        );
+  for (const chunk of chunks) {
+    const promises = [];
+    for (const ppid of chunk) {
+      promises.push(scrapePpid(ppid, browser));
+    }
+    const chunkTeacherObjs = await Promise.all(promises);
+    chunkTeacherObjs.forEach((teacherObj, i) => {
+      allTeacherInfo.push(teacherObj);
+    });
+  }
 
-        await page.waitForSelector("#MainContent_txtPPID");
-        await page.type("#MainContent_txtPPID", ppid);
-        await page.click("#MainContent_cmdSearch");
-        console.log("before waiting ppid selector, ppid: ", ppid);
-        await page.waitForSelector("#MainContent_lblPPID");
-        console.log("after selector for ppid");
+  console.log("allTeacherInfo from scraper:", allTeacherInfo);
 
-        console.log("before check");
-        const standardCredentialsExists =
-          (await page.$("#MainContent_gvStdCr")) !== null;
-
-        console.log("standardCredentialsExists", standardCredentialsExists);
-        let standardCredentials = [];
-
-        if (standardCredentialsExists) {
-          console.log("in standard");
-          standardCredentials = await page.evaluate(() => {
-            const rows = Array.from(
-              document.querySelectorAll("#MainContent_gvStdCr > tbody > tr")
-            );
-
-            return rows.map((row) => {
-              const cells = row.querySelectorAll("td");
-              console.log("here2");
-              return Array.from(cells).map((cell) => cell.innerText);
-            });
-          });
-          //Remove first blank array which contained the headers
-          standardCredentials.shift();
-          console.log("standard credentials:", standardCredentials);
-        }
-
-        const emergencyCredentialsExists =
-          (await page.$("#MainContent_gvEmgCr")) !== null;
-
-        let emergencyCredentials = [];
-
-        if (emergencyCredentialsExists) {
-          console.log("found emergency cred");
-          emergencyCredentials = await page.evaluate(() => {
-            const rows = Array.from(
-              document.querySelectorAll("#MainContent_gvEmgCr > tbody > tr")
-            );
-
-            return rows.map((row) => {
-              const cells = row.querySelectorAll("td");
-              return Array.from(cells).map((cell) => cell.innerText);
-            });
-          });
-          emergencyCredentials.shift();
-          console.log("emergency credentials: ", emergencyCredentials);
-        }
-
-        const applicationsExists =
-          (await page.$("#MainContent_gvApplInfo")) !== null;
-
-        let applications = [];
-
-        if (applicationsExists) {
-          console.log("found applications");
-          applications = await page.evaluate(() => {
-            const rows = Array.from(
-              document.querySelectorAll("#MainContent_gvApplInfo > tbody > tr")
-            );
-
-            return rows.map((row) => {
-              const cells = row.querySelectorAll("td");
-              return Array.from(cells).map((cell) => cell.innerText);
-            });
-          });
-
-          applications.shift();
-          console.log("applications credentials: ", applications);
-        }
-
-        return {
-          ppid,
-          standardCredentials,
-          emergencyCredentials,
-          applications,
-        };
-      })
-    );
-  };
-
-  const allTeacherInfo = await asyncMap(ppidArray);
-
-  console.log("about to close browser");
   browser.close();
-
-  console.log(allTeacherInfo);
-  // await page.screenshot({ path: screenshot });
 
   return allTeacherInfo; //Expected output: Array of Objects.
 };
 
-// getCertInfo(["3482578", "2940231", "1019256"]);
+const scrapePpid = async (ppid, browser) => {
+  const page = await browser.newPage();
 
-// getCertInfo(["1019256"]);
+  await page.goto(
+    "http://www.teachercertification.pa.gov/Screens/wfSearchEducators.aspx"
+  );
+  await page.waitForSelector("#MainContent_txtPPID");
+  await page.type("#MainContent_txtPPID", ppid);
+  await page.click("#MainContent_cmdSearch");
+  await page.waitForSelector("#MainContent_lblPPID", { timeout: 120000 });
 
-//has an emergency permit: 2940231
-//Credential, issue date, expiration date, credential status
+  const standardCredentialsExists =
+    (await page.$("#MainContent_gvStdCr")) !== null;
 
-//has an application: 1019256
+  let standardCredentials = [];
+
+  if (standardCredentialsExists) {
+    standardCredentials = await page.evaluate(() => {
+      const rows = Array.from(
+        document.querySelectorAll("#MainContent_gvStdCr > tbody > tr")
+      );
+
+      return rows.map((row) => {
+        const cells = row.querySelectorAll("td");
+        return Array.from(cells).map((cell) => cell.innerText);
+      });
+    });
+    //Remove first blank array which contained the headers
+    standardCredentials.shift();
+  }
+
+  const emergencyCredentialsExists =
+    (await page.$("#MainContent_gvEmgCr")) !== null;
+
+  let emergencyCredentials = [];
+
+  if (emergencyCredentialsExists) {
+    emergencyCredentials = await page.evaluate(() => {
+      const rows = Array.from(
+        document.querySelectorAll("#MainContent_gvEmgCr > tbody > tr")
+      );
+
+      return rows.map((row) => {
+        const cells = row.querySelectorAll("td");
+        return Array.from(cells).map((cell) => cell.innerText);
+      });
+    });
+    emergencyCredentials.shift();
+  }
+
+  const applicationsExists = (await page.$("#MainContent_gvApplInfo")) !== null;
+
+  let applications = [];
+
+  if (applicationsExists) {
+    applications = await page.evaluate(() => {
+      const rows = Array.from(
+        document.querySelectorAll("#MainContent_gvApplInfo > tbody > tr")
+      );
+
+      return rows.map((row) => {
+        const cells = row.querySelectorAll("td");
+        return Array.from(cells).map((cell) => cell.innerText);
+      });
+    });
+
+    applications.shift();
+  }
+
+  await page.close();
+
+  return {
+    ppid,
+    standardCredentials,
+    emergencyCredentials,
+    applications,
+  };
+};
+
+// getCertInfo([
+//   "3482578",
+//   "2940231",
+//   "1019256",
+//   "7262458",
+//   "2036486",
+//   "6570247",
+//   "3743295",
+//   "5862375",
+// ]);
+
+//In Browser:
+// 3482578,
+// 2940231,
+// 1019256,
+// 7262458,
+// 2036486,
+// 6570247,
+// 3743295,
+// 5862375,
+
+//No Record Found: 5842568
+
 module.exports = getCertInfo;
