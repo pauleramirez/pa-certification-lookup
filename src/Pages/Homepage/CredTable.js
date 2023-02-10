@@ -29,6 +29,9 @@ export default function SimpleTable({ data }) {
             <TableCell align="left">Standard Start Dates</TableCell>
             <TableCell align="left">Emergency Credentials</TableCell>
             <TableCell align="left">Emergency Start Dates</TableCell>
+            <TableCell align="left">Applications</TableCell>
+            <TableCell align="left">Application Status</TableCell>
+            <TableCell align="left">Application Status Dates</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -48,6 +51,15 @@ export default function SimpleTable({ data }) {
               </TableCell>
               <TableCell sx={{ verticalAlign: "top", whiteSpace: "pre" }}>
                 {groupIntoCell(row.emergencyCredentials, 1)}
+              </TableCell>
+              <TableCell sx={{ verticalAlign: "top", whiteSpace: "pre" }}>
+                {groupIntoCell(row.applications, 0)}
+              </TableCell>
+              <TableCell sx={{ verticalAlign: "top", whiteSpace: "pre" }}>
+                {groupIntoCell(row.applications, 4)}
+              </TableCell>
+              <TableCell sx={{ verticalAlign: "top", whiteSpace: "pre" }}>
+                {groupIntoCell(row.applications, 2)}
               </TableCell>
             </TableRow>
           ))}
