@@ -44,7 +44,9 @@ const scrapePpid = async (ppid, browser) => {
 
   // Wait for either element to appear
   const ppidCheck = await Promise.race([
-    page.waitForSelector("#MainContent_lblNoPPIDRec"),
+    page.waitForSelector("#MainContent_lblNoPPIDRec", {
+      timeout: 120000,
+    }),
     page.waitForSelector("#MainContent_lblPPID", {
       timeout: 120000,
     }),
@@ -130,17 +132,18 @@ const scrapePpid = async (ppid, browser) => {
   };
 };
 
-getCertInfo(["2940231"]);
+// getCertInfo(["2940231"]);
 
-//In Browser:
-// 3482578,
-// 2940231,
-// 1019256,
-// 7262458,
-// 2036486,
-// 6570247,
-// 3743295,
-// 5862375,
+/* In Browser:
+3482578,
+2940231,
+1019256,
+7262458,
+2036486,
+6570247,
+3743295,
+5862375,
+*/
 
 //No Record Found: 5842568
 
