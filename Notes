@@ -1,3 +1,5 @@
+2/11/23: add error message to frontend. Add timeout handling if things take too long to load.
+2/10/23: next step: add error handling for no educator found. Add timeout handling.
 2/10/23: fix applications to front end, what is the correct cell? use: 1019256
 2/9/23: add error handling: no educator found. Add timeout handling. add applications to frontend. x Remove comma from front end ppid display table
 2/6/23: probably need to remove map entirely and use for of with async

@@ -41,7 +41,26 @@ const scrapePpid = async (ppid, browser) => {
   await page.waitForSelector("#MainContent_txtPPID");
   await page.type("#MainContent_txtPPID", ppid);
   await page.click("#MainContent_cmdSearch");
-  await page.waitForSelector("#MainContent_lblPPID", { timeout: 120000 });
+
+  // Wait for either element to appear
+  const ppidCheck = await Promise.race([
+    page.waitForSelector("#MainContent_lblNoPPIDRec"),
+    page.waitForSelector("#MainContent_lblPPID", {
+      timeout: 120000,
+    }),
+  ]);
+
+  const ppidCheckId = await ppidCheck.getProperty("id");
+  const ppidCheckValue = await ppidCheckId.jsonValue();
+
+  if (ppidCheckValue == "MainContent_lblNoPPIDRec") {
+    console.log("No ppid found: ", ppid);
+    await page.close();
+    return {
+      ppid,
+      error: "no ppid found",
+    };
+  }
 
   const standardCredentialsExists =
     (await page.$("#MainContent_gvStdCr")) !== null;
@@ -111,16 +130,7 @@ const scrapePpid = async (ppid, browser) => {
   };
 };
 
-// getCertInfo([
-//   "3482578",
-//   "2940231",
-//   "1019256",
-//   "7262458",
-//   "2036486",
-//   "6570247",
-//   "3743295",
-//   "5862375",
-// ]);
+getCertInfo(["2940231"]);
 
 //In Browser:
 // 3482578,

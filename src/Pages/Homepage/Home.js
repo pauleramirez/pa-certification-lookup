@@ -29,7 +29,7 @@ const Home = () => {
       // Split the text using the regular expression
       let words = text.split(regex);
 
-      return words.filter((word) => word.length >= 2);
+      return words.filter((word) => word.length >= 7);
     }
 
     // Get the value of the text input field
