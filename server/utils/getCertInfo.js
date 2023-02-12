@@ -61,6 +61,9 @@ const scrapePpid = async (ppid, browser) => {
     return {
       ppid,
       error: "no ppid found",
+      standardCredentials: [],
+      emergencyCredentials: [],
+      applications: [],
     };
   }
 

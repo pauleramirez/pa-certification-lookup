@@ -37,8 +37,9 @@ export default function SimpleTable({ data }) {
         <TableBody>
           {data.map((row) => (
             <TableRow key={row.ppid}>
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" sx={{ whiteSpace: "pre" }}>
                 {row.ppid}
+                {row.error && "\nError: PPID not found"}
               </TableCell>
               <TableCell sx={{ verticalAlign: "top", whiteSpace: "pre" }}>
                 {groupIntoCell(row.standardCredentials, 0)}
