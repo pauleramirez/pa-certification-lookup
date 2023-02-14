@@ -42,25 +42,36 @@ const scrapePpid = async (ppid, browser) => {
   await page.type("#MainContent_txtPPID", ppid);
   await page.click("#MainContent_cmdSearch");
 
-  // Wait for either element to appear
-  const ppidCheck = await Promise.race([
-    page.waitForSelector("#MainContent_lblNoPPIDRec", {
-      timeout: 120000,
-    }),
-    page.waitForSelector("#MainContent_lblPPID", {
-      timeout: 120000,
-    }),
-  ]);
+  try {
+    // Wait for either element to appear
+    const ppidCheck = await Promise.race([
+      page.waitForSelector("#MainContent_lblNoPPIDRec", {
+        timeout: 120000,
+      }),
+      page.waitForSelector("#MainContent_lblPPID", {
+        timeout: 120000,
+      }),
+    ]);
 
-  const ppidCheckId = await ppidCheck.getProperty("id");
-  const ppidCheckValue = await ppidCheckId.jsonValue();
+    const ppidCheckId = await ppidCheck.getProperty("id");
+    const ppidCheckValue = await ppidCheckId.jsonValue();
 
-  if (ppidCheckValue == "MainContent_lblNoPPIDRec") {
-    console.log("No ppid found: ", ppid);
-    await page.close();
+    if (ppidCheckValue == "MainContent_lblNoPPIDRec") {
+      console.log("No ppid found: ", ppid);
+      await page.close();
+      return {
+        ppid,
+        error: "no ppid found",
+        standardCredentials: [],
+        emergencyCredentials: [],
+        applications: [],
+      };
+    }
+  } catch (error) {
+    console.log("Error in the promise.race in scraper: ", error);
     return {
       ppid,
-      error: "no ppid found",
+      error: "Process timed out",
       standardCredentials: [],
       emergencyCredentials: [],
       applications: [],
@@ -146,6 +157,7 @@ const scrapePpid = async (ppid, browser) => {
 6570247,
 3743295,
 5862375,
+5842568
 */
 
 //No Record Found: 5842568
