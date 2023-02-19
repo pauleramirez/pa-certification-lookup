@@ -1,4 +1,6 @@
-2/12/23: Add timeout handling if things take too long to load. Add download as spreadsheet. 
+2/17/23: Switching to just working on electron
+2/14/23: Add download as spreadsheet - see chatgpt chat
+2/12/23: Add timeout handling if things take too long to load. Add download as spreadsheet.
 2/11/23: add error message to frontend. Add timeout handling if things take too long to load. Eventually, add download as spreadsheet.
 2/10/23: next step: add error handling for no educator found. Add timeout handling.
 2/10/23: fix applications to front end, what is the correct cell? use: 1019256
