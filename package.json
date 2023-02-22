@@ -29,8 +29,9 @@
     "dev": "react-scripts start & nodemon server/server.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electrondev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
-    "electron": "wait-on tcp:3000 && electron ."
+    "electrondev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\" \"npm:start-server\"",
+    "electron": "wait-on tcp:3000 && electron .",
+    "start-server": "node server/server.js"
   },
   "eslintConfig": {
     "extends": [
