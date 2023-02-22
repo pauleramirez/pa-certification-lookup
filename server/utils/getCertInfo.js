@@ -162,4 +162,7 @@ const scrapePpid = async (ppid, browser) => {
 
 //No Record Found: 5842568
 
+//error site: http://www.teachercertification.pa.gov/Error/wfError.aspx
+//http://www.teachercertification.pa.gov/Error/wfError.aspx?aspxerrorpath=/Screens/wfSearchEducators.aspx
+
 module.exports = getCertInfo;
